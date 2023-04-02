@@ -400,9 +400,10 @@ class MiGPT:
             self.config.mi_did,
             f"{self.config.wakeup_command} {WAKEUP_KEYWORD} 0",
         )
-
+    # 在此处 一直循环 
     async def run_forever(self):
         async with ClientSession() as session:
+            # 登录小爱同学
             await self.init_all_data(session)
             task = asyncio.create_task(self.poll_latest_ask())
             assert task is not None  # to keep the reference to task, do not remove this
@@ -421,6 +422,7 @@ class MiGPT:
                         print("开始对话")
                         self.in_conversation = True
                         await self.wakeup_xiaoai()
+                    # 暂停小爱同学 自己的回答
                     await self.stop_if_xiaoai_is_playing()
                     continue
                 elif query == self.config.end_conversation:
